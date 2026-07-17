@@ -1,1 +1,13 @@
+2026-07-18
 
+Legacy Desktop
+
+• Installed 32 GB RAM
+• Enabled Intel VT-x
+• Enabled Hyper-V
+• Configured Storage Spaces
+
+Dell OptiPlex
+
+• Installed Innodisk 256 GB NVMe
+• Proxmox storage preparation
