@@ -1,1 +1,19 @@
-## Enterprise IT & Cybersecurity Infrastructure Project documenting the design, implementation and operation of the CyberTron SMB enterprise environment.
+## CyberTron Enterprise
+
+### Enterprise IT & Cybersecurity Infrastructure Project
+
+Mission
+
+Current Architecture
+
+Hardware Inventory
+
+Current Milestone
+
+Repository Structure
+
+Roadmap
+
+Learning Objectives
+
+License
