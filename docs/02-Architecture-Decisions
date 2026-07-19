@@ -1,8 +1,0 @@
-| ADR     | Decision                                      |
-| ------- | --------------------------------------------- |
-| ADR-001 | CyberTron as the enterprise model             |
-| ADR-002 | Dell OptiPlex is the primary Proxmox host     |
-| ADR-003 | Legacy Desktop is the Windows Enterprise Host |
-| ADR-004 | Storage Spaces uses Two-Way Mirror            |
-| ADR-005 | Separate 4G Router for the CyberTron Lab      |
-
