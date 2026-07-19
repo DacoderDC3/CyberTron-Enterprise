@@ -10,6 +10,40 @@ related_documents:
   - ../01-Architecture/CyberTron-Enterprise-Infrastructure-v0.1.md
 ---
 
+                    WHY
+            Governance Layer
+────────────────────────────────
+
+Mission
+
+Values
+
+CIEL
+
+────────────────────────────────
+
+                    WHAT
+          Architecture Layer
+────────────────────────────────
+
+Enterprise Architecture
+
+Architecture Decisions
+
+────────────────────────────────
+
+                    HOW
+         Operations Layer
+────────────────────────────────
+
+Projects
+
+Build Logs
+
+Runbooks
+
+Lessons Learned
+---
 # CyberTron Engineering Methodology (CIEL)
 
 > **CyberTron Infrastructure Engineering Lifecycle (CIEL)**
