@@ -108,7 +108,101 @@ Every major configuration should be reproducible using documented procedures.
 
 ---
 
-# 6. Enterprise Architecture
+# 6. Enterprise Architecture Pillars
+
+The CyberTron Enterprise environment is organised around seven architectural pillars.
+
+Every technology introduced into the environment must support one or more of these pillars.
+
+| Pillar | Purpose | Primary ADRs |
+|---------|---------|--------------|
+| Business | Defines why the enterprise exists, its objectives and operating model. | ADR-001 |
+| Compute | Provides the virtualisation platforms and enterprise workloads supporting the business. | ADR-002, ADR-003 |
+| Storage | Provides resilient, high-performance storage for enterprise services and security data. | ADR-004 |
+| Network | Provides secure connectivity, segmentation and communication between systems. | ADR-005 *(planned)* |
+| Identity | Provides authentication, authorisation and enterprise identity management. | ADR-006 *(planned)* |
+| Security | Protects enterprise assets through monitoring, logging, detection and response. | ADR-007 *(planned)* |
+| Operations | Defines how CyberTron is operated, documented, automated, backed up and continuously improved. | ADR-008 to ADR-010 *(planned)* |
+
+---
+
+## Relationship Between Pillars
+
+The pillars are layered and interdependent.
+
+```text
+Business
+    │
+    ▼
+Compute
+    │
+    ▼
+Storage
+    │
+    ▼
+Network
+    │
+    ▼
+Identity
+    │
+    ▼
+Security
+    │
+    ▼
+Operations
+```
+
+Each layer depends upon the capabilities provided by the layers beneath it.
+
+Changes to one pillar may require corresponding updates to the architecture, documentation and Architecture Decision Records.
+
+---
+
+## Engineering Philosophy
+
+CyberTron adopts a layered engineering approach.
+
+Business requirements drive architectural decisions.
+
+Architectural decisions determine technology selection.
+
+Technology is implemented using documented procedures.
+
+Operational experience feeds back into continual improvement.
+
+This lifecycle can be represented as:
+
+```text
+Business Requirement
+        │
+        ▼
+Architecture
+        │
+        ▼
+Architecture Decision Record
+        │
+        ▼
+Implementation
+        │
+        ▼
+Validation
+        │
+        ▼
+Build Log
+        │
+        ▼
+Runbook
+        │
+        ▼
+Lessons Learned
+        │
+        ▼
+Architecture Review
+```
+
+This continuous improvement cycle ensures that CyberTron evolves through deliberate engineering decisions rather than ad-hoc changes.
+
+## 6.1 Enterprise Architecture
 
 ```
                     Internet
