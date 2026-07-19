@@ -1,9 +1,37 @@
-This file should explain what the governance layer is and link to the CIEL document.
+# CyberTron Enterprise
 
-It should contain:
+Welcome to the CyberTron Enterprise Engineering Handbook.
 
-purpose of the governance folder
-link to CIEL
-link to the main architecture document
-link to ADRs
-a short note that this is the top of the documentation hierarchy
+## Start Here
+
+1. Mission
+2. Engineering Methodology (CIEL)
+3. Enterprise Architecture
+4. Architecture Decisions
+5. Current Projects
+
+---
+
+## Documentation Pyramid
+
+WHY
+
+↓
+
+WHAT
+
+↓
+
+HOW
+
+---
+
+## Current Version
+
+Architecture v0.1
+
+CIEL v1.0
+
+Current Milestone
+
+Phase 1 – Windows Enterprise
