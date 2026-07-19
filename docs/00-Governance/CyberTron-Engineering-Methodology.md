@@ -78,6 +78,50 @@ Security controls are integrated into every solution rather than added afterward
 
 Every completed project should improve the next one.
 
+# 3a. Engineering Values
+
+CyberTron Engineering is founded on five core values. These values guide every architectural decision, implementation, and operational activity undertaken within the enterprise.
+
+## 3.1 Purpose Before Technology
+
+Technology shall only be introduced where it satisfies a clearly defined business requirement, operational requirement, or learning objective.
+
+Solutions are selected because they solve a problem—not because they are fashionable or technically interesting.
+
+---
+
+## 3.2 Documentation is a Deliverable
+
+Documentation is considered part of the solution, not an afterthought.
+
+A task is not complete until its architecture, implementation, operation, and supporting knowledge have been documented to a professional standard.
+
+---
+
+## 3.3 Reuse Before Replace
+
+Existing hardware and software assets should be reused wherever practical before new equipment is purchased.
+
+Solutions should maximise learning outcomes while remaining cost-effective and environmentally responsible.
+
+---
+
+## 3.4 Automate Where Sensible
+
+Repeatable tasks should be automated whenever the effort to automate provides long-term operational value.
+
+Automation should improve consistency, reduce manual effort, minimise human error, and increase operational efficiency.
+
+---
+
+## 3.5 Learn Through Engineering
+
+The primary objective of CyberTron Enterprise is not simply to build infrastructure, but to understand, document, and continually improve it.
+
+Every project should contribute to deeper technical knowledge, better engineering judgement, and improved operational capability.
+
+Failures, troubleshooting, and lessons learned are considered valuable engineering outcomes and shall be documented accordingly..
+
 ---
 
 # 4. Engineering Lifecycle
