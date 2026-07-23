@@ -11,3 +11,17 @@ Dell OptiPlex
 
 • Installed Innodisk 256 GB NVMe
 • Proxmox storage preparation
+
+2026-07-23
+BL-002 – CYB-SRV01 Deployment
+
+VM Name: CYB-SRV01
+Generation: 2
+vCPU: 2
+RAM: 8 GB
+Dynamic Memory: Disabled
+Disk: 100 GB VHDX (Dynamic)
+Network: vSwitch-External
+Secure Boot: Enabled
+vTPM: Enabled
+Checkpoint Type: Production
