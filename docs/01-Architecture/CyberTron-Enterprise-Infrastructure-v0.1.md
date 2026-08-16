@@ -307,7 +307,7 @@ GPT → NTFS
         ▼
 
 E:\ CyberTronData
-
+```
 ---
 
 # 9. Windows Platform
