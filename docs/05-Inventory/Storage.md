@@ -4,7 +4,6 @@
 
 Add the following section to your inventory landing page. If that README already has separate sections for devices, put this under **Enterprise Storage**.
 
-```markdown
 ## Enterprise Storage Inventory
 
 ### CYB-SRV01 Storage Platform
