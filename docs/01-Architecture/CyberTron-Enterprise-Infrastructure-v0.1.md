@@ -1,17 +1,17 @@
 ---
 title: CyberTron Enterprise Infrastructure Architecture
-version: 0.1
-milestone: Foundation Baseline
+version: 0.2
+milestone: Enterprise Storage Architecture complete
 status: Draft
 classification: Private
 author: Wayne Stynder
 repository: CyberTron-Enterprise
-last_updated: 2026-07-19
+last_updated: 2026-08-16
 ---
 
 # CyberTron Enterprise Infrastructure Architecture
 
-> **Version 0.1 – Foundation Baseline**
+> **Version 0.2 – Implemented Enterprise Mirrored Storage**
 
 ---
 
@@ -250,8 +250,63 @@ This continuous improvement cycle ensures that CyberTron evolves through deliber
 | 3 × 2 TB HDD | Storage Spaces (Windows Server VM) |
 | 500 GB HDD | Local Data / X-Plane |
 
-Storage Spaces will use **Two-Way Mirror** for performance and resiliency.
+- Storage Spaces will use **Two-Way Mirror** for performance and resiliency.
 
+### Design Objective
+
+CyberTron enterprise storage is designed to provide resilient Windows Server-managed storage using existing physical hardware while providing practical experience with enterprise file-server administration.
+
+### Physical Architecture
+
+Three 2 TB Western Digital enterprise HDDs are physically installed in the Windows Hyper-V host.
+
+The physical disks are:
+
+- Offline to the Windows 11 host.
+
+- Attached directly to `CYB-SRV01` using Hyper-V physical disk passthrough.
+
+- Managed by Windows Server 2022 Storage Spaces.
+
+### Logical Storage Architecture
+
+```text
+
+3 × 2 TB WD Enterprise HDD
+
+        │
+
+        ▼
+
+CyberTronStoragePool
+
+     ~5.46 TB raw
+
+        │
+
+        ▼
+
+Two-Way Mirror
+
+CyberTronData
+
+        │
+
+        ▼
+
+~2.72 TB usable
+
+        │
+
+        ▼
+
+GPT → NTFS
+
+        │
+
+        ▼
+
+E:\ CyberTronData
 ---
 
 # 9. Windows Platform
