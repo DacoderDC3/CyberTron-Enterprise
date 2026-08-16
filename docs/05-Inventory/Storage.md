@@ -1,13 +1,12 @@
----
-
 # 4. `docs/05-Inventory/README.md`
 
-Add the following section to your inventory landing page. If that README already has separate sections for devices, put this under **Enterprise Storage**.
+- Add the following section to your inventory landing page. If that README already has separate sections for devices, put this under **Enterprise Storage**.
 
 ## Enterprise Storage Inventory
 
 ### CYB-SRV01 Storage Platform
 
+```text
 | Property | Value |
 |---|---|
 | Storage Server | `CYB-SRV01` |
@@ -24,6 +23,7 @@ Add the following section to your inventory landing page. If that README already
 | Volume | `E:` |
 | Volume Label | `CyberTronData` |
 | Status | Healthy / Operational |
+```
 
 ### Physical HDD Inventory
 
