@@ -26,6 +26,7 @@ Add the following section to your inventory landing page. If that README already
 | Volume | `E:` |
 | Volume Label | `CyberTronData` |
 | Status | Healthy / Operational |
+```
 
 ### Physical HDD Inventory
 
