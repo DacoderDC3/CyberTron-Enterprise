@@ -1,4 +1,3 @@
----
 
 # 4. `docs/05-Inventory/README.md`
 
