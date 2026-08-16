@@ -7,6 +7,7 @@ Add the following section to your inventory landing page. If that README already
 ## Enterprise Storage Inventory
 
 ### CYB-SRV01 Storage Platform
+```
 
 ```text
 | Property | Value |
