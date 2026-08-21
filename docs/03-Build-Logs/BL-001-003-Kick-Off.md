@@ -1,0 +1,92 @@
+## 2026-07-18
+# BL-001 - Configure Hardware
+
+Legacy Desktop
+
+• Installed 32 GB RAM
+• Enabled Intel VT-x
+• Enabled Hyper-V
+• Configured Storage Spaces
+
+Dell OptiPlex
+
+• Installed Innodisk 256 GB NVMe
+• Proxmox storage preparation
+
+## 2026-07-23
+# BL-002 – CYB-SRV01 Deployment
+
+VM Name: CYB-SRV01
+Generation: 2
+vCPU: 2
+RAM: 8 GB
+Dynamic Memory: Disabled
+Disk: 100 GB VHDX (Dynamic)
+Network: vSwitch-External
+Secure Boot: Enabled
+vTPM: Enabled
+Checkpoint Type: Production
+
+## UPDATE 2026-08-16
+# BL-003 — Enterprise Storage Deployment
+
+## Purpose
+
+This build log documents the implementation of the CyberTron Enterprise Storage architecture defined in ADR-004.
+
+## Scope
+
+This build covers:
+
+- Removal of the original Windows host Storage Spaces configuration.
+- Preparation of the three 2 TB physical HDDs.
+- Hyper-V physical disk passthrough.
+- Windows Server Storage Spaces configuration.
+- Creation of the `CyberTronData` two-way mirror.
+- Creation and validation of the NTFS enterprise data volume.
+
+## Audience
+
+CyberTron infrastructure administrators and future maintainers of the environment.
+
+---
+
+## Date
+
+**Completed:** 16 August 2026
+
+---
+
+## Related Architecture
+
+- ADR-003 — Windows Enterprise Services Platform
+- ADR-004 — Enterprise Storage Architecture
+
+---
+
+# 1. Starting Configuration
+
+The three 2 TB Western Digital HDDs were originally managed by the Windows 11 Hyper-V host.
+
+Original configuration:
+
+| Component | Value |
+|---|---|
+| Storage Pool | `DataVaultPool` |
+| Virtual Disk | `ProtectedStorage` |
+| Resiliency | Parity |
+| Volume | `S:` |
+| Volume label | `MassStorage` |
+
+The architecture required the Windows Server VM to take ownership of these disks instead.
+
+---
+
+# 2. Remove Original Virtual Disk
+
+The parity virtual disk was removed:
+
+```powershell
+Get-VirtualDisk "ProtectedStorage" | Remove-VirtualDisk
+
+---
