@@ -1,0 +1,488 @@
+# CyberTron Enterprise — Network Baseline
+
+**Baseline:** v1.0  
+**Date:** 21 August 2026  
+**Status:** Operational / Verified  
+**Primary Router:** MikroTik hEX PoE (RB960PGS)  
+**RouterOS:** 7.21.5 Long-term  
+
+---
+
+## 1. Purpose
+
+This document defines the current network baseline for the CyberTron Enterprise cybersecurity homelab.
+
+The environment is designed to provide a practical enterprise-style platform for developing skills in:
+
+- network administration and security;
+- Windows and Linux administration;
+- virtualisation;
+- SIEM and security monitoring;
+- identity and Active Directory;
+- vulnerability management;
+- incident response;
+- network segmentation;
+- defensive and offensive security;
+- governance, risk and compliance.
+
+The current baseline intentionally uses a relatively simple flat LAN.
+
+Network segmentation and VLANs are planned as later learning phases rather than being introduced before the underlying routing, addressing, firewalling and management environment is understood and verified.
+
+---
+
+## 2. Current Network Architecture
+
+```text
+                     Skinny 4G / LTE
+                           │
+                    ┌──────▼──────┐
+                    │  4G Router  │
+                    │ 192.168.8.1 │
+                    │ LTE Gateway │
+                    └──────┬──────┘
+                           │
+                    192.168.8.0/24
+                           │
+                        ether1
+                    ┌──────▼──────┐
+                    │ CYB-RTR-01  │
+                    │ MikroTik    │
+                    │ hEX PoE     │
+                    │             │
+                    │ WAN: DHCP   │
+                    │ LAN:        │
+                    │172.16.10.1  │
+                    └──────┬──────┘
+                        ether2
+                           │
+                    ┌──────▼──────┐
+                    │ TP-Link     │
+                    │ TL-SG1008D  │
+                    │ GbE Switch  │
+                    └──┬───┬───┬──┘
+                       │   │   │
+           ┌───────────┘   │   └───────────────┐
+           │               │                   │
+     HP Admin         Dell Proxmox       ASUS Hyper-V
+   172.16.10.20       172.16.10.12       172.16.10.11
+                           │                   │
+                    ┌──────┼──────┐       CYB-SRV01
+                    │      │      │       172.16.10.10
+                 Ubuntu  Ubuntu  Wazuh
+                 Server Client   SIEM
+                   .13   DHCP     .14
+
+                 Mac mini
+               172.16.10.25
+```
+
+---
+
+## 3. Network Addressing
+
+### Upstream Network
+
+| Parameter | Value |
+|---|---|
+| Network | `192.168.8.0/24` |
+| Upstream gateway | `192.168.8.1` |
+| Device | Skinny 4G Router |
+| CYB-RTR-01 WAN | DHCP |
+| Observed WAN address | `192.168.8.151/24` |
+| CYB-RTR-01 WAN interface | `ether1` |
+
+The WAN address is dynamically assigned and may change.
+
+### CyberTron LAN
+
+| Parameter | Value |
+|---|---|
+| Network | `172.16.10.0/24` |
+| Default gateway | `172.16.10.1` |
+| DNS resolver presented to clients | `172.16.10.1` |
+| Router interface | `bridge` |
+| DHCP server | CYB-RTR-01 |
+| DHCP pool | `172.16.10.100-199` |
+
+---
+
+## 4. IP Address Convention
+
+The current addressing convention is:
+
+| Range | Intended use |
+|---|---|
+| `.1` | Network gateway |
+| `.2-.9` | Reserved infrastructure |
+| `.10-.19` | Servers, hypervisors and security infrastructure |
+| `.20-.49` | Administration / managed endpoints |
+| `.50-.99` | Future infrastructure |
+| `.100-.199` | Dynamic DHCP clients |
+| `.200-.254` | Reserved for future use |
+
+This convention may be superseded when VLAN segmentation is introduced.
+
+---
+
+## 5. Asset Address Inventory
+
+| IP Address | Hostname / Asset | Platform / Role | Address Method |
+|---|---|---|---|
+| `172.16.10.1` | CYB-RTR-01 | MikroTik router/firewall/DHCP/DNS forwarder | Static |
+| `172.16.10.10` | CYB-SRV01 | Windows Server 2022 VM | DHCP reservation |
+| `172.16.10.11` | ASUS Hyper-V Host | Windows 11 Pro / Hyper-V | DHCP reservation |
+| `172.16.10.12` | pve | Dell OptiPlex 7050 / Proxmox VE | Local static |
+| `172.16.10.13` | srv-ubuntu-01 | Ubuntu Server VM | DHCP reservation |
+| `172.16.10.14` | siem-wazuh-01 | Wazuh SIEM VM | DHCP reservation |
+| `172.16.10.20` | cli-w11pro-01 | HP ProBook 450 G6 / Admin workstation | DHCP reservation |
+| `172.16.10.25` | cli-macos-01 | Mac mini / managed endpoint | DHCP reservation |
+| Dynamic | cli-ubuntu-01 | Ubuntu client VM | DHCP |
+
+At baseline creation, `cli-ubuntu-01` had received `172.16.10.194`. This is deliberately dynamic and should not be considered a permanent address.
+
+---
+
+## 6. MikroTik Interface Configuration
+
+### Physical Interfaces
+
+| Interface | Function | Status |
+|---|---|---|
+| `ether1` | WAN → Skinny 4G Router | Active |
+| `ether2` | LAN → TP-Link TL-SG1008D | Active |
+| `ether3` | Future use | Unused |
+| `ether4` | Future use | Unused |
+| `ether5` | Future use | Unused |
+| `sfp1` | Future use | Unused |
+
+### Interface Lists
+
+```text
+LAN → bridge
+WAN → ether1
+```
+
+These interface lists are referenced by the RouterOS firewall and NAT configuration.
+
+---
+
+## 7. Routing
+
+CYB-RTR-01 has three principal IPv4 routes:
+
+```text
+0.0.0.0/0       → 192.168.8.1
+172.16.10.0/24  → bridge
+192.168.8.0/24   → ether1
+```
+
+This provides:
+
+1. direct routing to the CyberTron LAN;
+2. direct routing to the upstream 4G network;
+3. default routing to the Skinny 4G router.
+
+---
+
+## 8. Network Address Translation
+
+CYB-RTR-01 performs source NAT using RouterOS masquerading:
+
+```routeros
+chain=srcnat action=masquerade out-interface-list=WAN
+```
+
+Traffic therefore follows:
+
+```text
+172.16.10.x
+      │
+      ▼
+CYB-RTR-01
+      │
+      │ Source NAT / Masquerade
+      ▼
+192.168.8.x
+      │
+      ▼
+Skinny 4G Router
+      │
+      ▼
+Internet
+```
+
+No unnecessary destination NAT or port-forwarding rules were present at baseline.
+
+---
+
+## 9. Firewall Baseline
+
+CYB-RTR-01 currently uses the RouterOS stateful firewall baseline.
+
+Key behaviours include:
+
+- accept established, related and untracked traffic;
+- drop invalid traffic;
+- permit ICMP;
+- prevent router-management/input traffic not originating from the LAN;
+- FastTrack established connections;
+- permit established/related forwarding;
+- drop invalid forwarded traffic;
+- drop unsolicited new WAN connections unless destination NAT applies.
+
+The firewall is intentionally uncomplicated while CyberTron remains a flat LAN.
+
+Inter-zone firewall policy will become a major design component when VLAN segmentation is implemented.
+
+---
+
+## 10. DNS Architecture
+
+CyberTron clients receive:
+
+```text
+DNS server: 172.16.10.1
+```
+
+CYB-RTR-01 currently obtains its upstream DNS dynamically from:
+
+```text
+192.168.8.1
+```
+
+Current resolution path:
+
+```text
+CyberTron endpoint
+       │
+       ▼
+172.16.10.1
+ CYB-RTR-01
+       │
+       ▼
+192.168.8.1
+ 4G Router
+       │
+       ▼
+Upstream DNS
+```
+
+RouterOS `allow-remote-requests` is enabled so CYB-RTR-01 can provide DNS resolution to LAN clients.
+
+This architecture will be revisited when Active Directory-integrated DNS is introduced.
+
+---
+
+## 11. Router Management Security
+
+### Enabled Management Methods
+
+The intended management methods are:
+
+- SSH;
+- WinBox;
+- WebFig temporarily.
+
+Management access is restricted to:
+
+```text
+172.16.10.0/24
+```
+
+### Disabled Services
+
+Unused RouterOS services were disabled as part of baseline hardening:
+
+- FTP;
+- Telnet;
+- API;
+- API-SSL.
+
+### Layer-2 Management
+
+The following are restricted to the LAN interface list:
+
+```text
+MAC server       → LAN
+MAC WinBox       → LAN
+Neighbour discovery → LAN
+```
+
+This prevents MikroTik Layer-2 management/discovery exposure toward the upstream 4G network.
+
+### Future Improvement
+
+WebFig currently uses HTTP.
+
+Future hardening should:
+
+1. configure an appropriate certificate;
+2. enable HTTPS management;
+3. disable HTTP;
+4. eventually restrict administrative access to a dedicated management VLAN.
+
+---
+
+## 12. Endpoint Security Observations
+
+### CYB-SRV01
+
+Windows Server initially did not respond to ICMP Echo Requests from the HP administration workstation.
+
+Investigation showed the Windows Firewall inbound ICMPv4 Echo Request rule was disabled.
+
+Only the required rule was enabled rather than disabling Windows Firewall.
+
+### ASUS Hyper-V Host
+
+Following the router recovery test:
+
+- CYB-RTR-01 could reach `172.16.10.11`;
+- the HP administration workstation could not ping `.11`.
+
+This is currently considered an endpoint firewall/ICMP behaviour rather than a network recovery failure.
+
+### Mac mini
+
+The Mac mini uses:
+
+```text
+172.16.10.25
+```
+
+macOS Firewall Stealth Mode remains enabled.
+
+Consequently, failure of another endpoint to receive ICMP Echo Replies from the Mac should not by itself be interpreted as host unavailability.
+
+---
+
+## 13. Virtualisation
+
+### Proxmox
+
+Host:
+
+```text
+172.16.10.12
+```
+
+Current VMs:
+
+| VM ID | Hostname | Function |
+|---:|---|---|
+| 100 | srv-ubuntu-01 | Ubuntu Server |
+| 101 | cli-ubuntu-01 | Ubuntu client |
+| 102 | siem-wazuh-01 | Wazuh SIEM |
+
+The Proxmox virtual bridge successfully passes DHCP traffic from CYB-RTR-01 to its VMs.
+
+### Hyper-V
+
+Host:
+
+```text
+172.16.10.11
+```
+
+Current infrastructure VM:
+
+```text
+CYB-SRV01 → 172.16.10.10
+```
+
+Hyper-V networking successfully passes CyberTron LAN connectivity to the Windows Server VM.
+
+---
+
+## 14. Backup and Recovery
+
+Configuration checkpoints were taken throughout the migration.
+
+Backups included:
+
+- RouterOS configuration exports;
+- RouterOS binary backups;
+- Proxmox VM snapshots/backups where appropriate.
+
+A final post-hardening checkpoint was taken before recovery testing.
+
+Backup files were downloaded from CYB-RTR-01 to the administration workstation and removed from constrained router storage after verification.
+
+---
+
+## 15. Recovery Validation
+
+A controlled CYB-RTR-01 reboot was performed after configuration and security hardening.
+
+The environment recovered without manual configuration intervention.
+
+Verified post-reboot:
+
+- router LAN address;
+- DHCP service;
+- DHCP reservations;
+- routing;
+- management access;
+- internal host reachability;
+- Proxmox services;
+- security configuration persistence.
+
+See:
+
+`RECOVERY-TEST.md`
+
+for detailed test evidence.
+
+---
+
+## 16. Current Known Limitation
+
+At baseline creation, the Skinny 4G service had exhausted its available mobile data allowance.
+
+This caused:
+
+- Internet ICMP tests to fail;
+- outbound HTTPS requests to fail or be redirected/intercepted;
+- normal Internet transit to be unavailable.
+
+Packet capture demonstrated that CYB-RTR-01 was correctly:
+
+1. receiving LAN traffic;
+2. forwarding it;
+3. performing source NAT;
+4. transmitting it through `ether1`.
+
+The failure was therefore identified as upstream service availability rather than a CyberTron routing or firewall failure.
+
+External Internet verification should be repeated once mobile data service is restored.
+
+---
+
+## 17. Future Development
+
+Planned development includes:
+
+- Active Directory Domain Services;
+- AD-integrated DNS;
+- Wazuh endpoint integration;
+- centralised logging;
+- vulnerability management;
+- network segmentation;
+- VLAN implementation;
+- management VLAN;
+- blue-team monitoring network;
+- attack/red-team network;
+- isolated malware/detonation environment;
+- secondary MikroTik routers;
+- policy routing through isolated/dirty WAN infrastructure;
+- improved certificate-based management;
+- configuration monitoring and change management.
+
+---
+
+## 18. Baseline Status
+
+**CyberTron Network Baseline v1.0: VERIFIED**
+
+The environment currently provides a stable routed and firewalled foundation for subsequent enterprise cybersecurity lab development.
