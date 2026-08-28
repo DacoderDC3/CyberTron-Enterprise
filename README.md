@@ -9,7 +9,10 @@
 
 ---
 
-Overview
+
+⸻
+
+## Overview
 
 CyberTron Enterprise is a long-term engineering project that designs, builds and operates the complete IT infrastructure for a fictional cybersecurity consultancy.
 
@@ -29,7 +32,7 @@ Every major engineering decision is documented before implementation and every i
 
 ⸻
 
-Project Objectives
+## Project Objectives
 
 The CyberTron Enterprise project has four primary objectives.
 
@@ -40,7 +43,7 @@ The CyberTron Enterprise project has four primary objectives.
 
 ⸻
 
-CyberTron Engineering Management System (CEMS)
+## CyberTron Engineering Management System (CEMS)
 
 CyberTron follows a structured engineering methodology.
 
