@@ -387,7 +387,7 @@ During the assessment, CIS control 1.1.6:
 Relax minimum password length limits
 ```
 
-was initially treated as applicable to the Domain Controller profile.
+was investigated as a possible Domain Controller requirement.
 
 Review of the CIS Microsoft Windows Server 2022 Benchmark v5.1.0 confirmed that this recommendation is applicable to:
 
@@ -403,13 +403,19 @@ The setting was therefore classified:
 N/A — Member Server profile only
 ```
 
-rather than PASS or FAIL for CYB-SRV01.
+a registry configuration used during investigation was returned tp its previous state and is not being claimed as part of the CyberTron Domain Controller CIS baseline.
 
-This correction demonstrates an important compliance principle:
+Similarly, CIS 1.2.3:
+
+```text
+Allow Administrator account lockout
+```
+
+is explicitly Member Server only and was classified N/A.
+
+This demonstrates an important compliance principle:
 
 > A technically desirable security setting must not be reported as a benchmark requirement unless it is applicable to the assessed profile.
-
-Similarly, CIS 1.2.3 is explicitly Member Server only and was classified N/A.
 
 ---
 
